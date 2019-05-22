@@ -51,12 +51,9 @@ ReactDOM.render(
           title: "My First Tour",
           description: "A tour."
         },
-        index: {
-          tourist: {
-            provider: "github",
-            name: "hgoldstein95/tourist"
-          }
-        }
+        index: new Map([
+          ["tourist", { provider: "github", name: "hgoldstein95/tourist" }]
+        ])
       }}
     />
   </MuiThemeProvider>,

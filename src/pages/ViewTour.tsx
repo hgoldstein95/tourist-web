@@ -1,10 +1,29 @@
-import { Button, Grid, Typography } from "@material-ui/core";
+import { Link, Grid, Typography, IconButton, Icon } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { Converter } from "showdown";
-import { Stop, Tour, Index } from "../model";
+import { Stop, Tour, Index, WebRepository } from "../model";
 import { Page, ViewTourPage } from "../pageTypes";
 import axios from "axios";
+
+export const RepositoryLink: React.FC<{
+  repository: WebRepository;
+  path: string;
+  line: number;
+}> = props => {
+  const url =
+    "https://github.com/" +
+    props.repository.name +
+    "/blob/master/" +
+    props.path +
+    "#L" +
+    props.line;
+  return (
+    <Link href={url} style={{ float: "right" }}>
+      View on GitHub
+    </Link>
+  );
+};
 
 export const StopProse: React.FC<{
   index: Index;
@@ -13,6 +32,8 @@ export const StopProse: React.FC<{
 }> = props => {
   const stop = props.stop;
 
+  const repository = props.index.get(props.stop.repository);
+
   const converter = new Converter();
   const htmlBody = converter.makeHtml(stop.body);
 
@@ -20,6 +41,13 @@ export const StopProse: React.FC<{
     <div>
       <Typography variant="h3">{stop.title}</Typography>
       <div dangerouslySetInnerHTML={{ __html: htmlBody }} />
+      {repository && (
+        <RepositoryLink
+          repository={repository}
+          path={stop.relPath}
+          line={stop.line}
+        />
+      )}
     </div>
   );
 };
@@ -31,7 +59,7 @@ export const StopCode: React.FC<{
 }> = props => {
   const [code, setCode] = useState("Loading...");
 
-  const repository = props.index[props.stop.repository];
+  const repository = props.index.get(props.stop.repository);
 
   useEffect(() => {
     if (!repository) {
@@ -87,18 +115,18 @@ export const ViewTour: React.FC<{
       style={{ paddingTop: 20, paddingLeft: 60, paddingRight: 60 }}
     >
       <Grid item xs={12} style={{ marginBottom: 20 }}>
-        <Button onClick={decIndex} disabled={!canGoBack}>
-          Back
-        </Button>
-        <Button
+        <IconButton onClick={decIndex} disabled={!canGoBack}>
+          <Icon>arrow_back</Icon>
+        </IconButton>
+        <IconButton
           onClick={incIndex}
           disabled={!canGoForward}
           style={{ float: "right" }}
         >
-          Forward
-        </Button>
+          <Icon>arrow_forward</Icon>
+        </IconButton>
       </Grid>
-      <Grid item md={4} xs={12}>
+      <Grid item md={4} xs={12} style={{ paddingRight: 60 }}>
         <StopProse
           index={props.page.index}
           tour={props.page.tour}

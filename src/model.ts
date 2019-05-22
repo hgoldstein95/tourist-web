@@ -3,9 +3,7 @@ export interface WebRepository {
   name: string;
 }
 
-export interface Index {
-  [key: string]: WebRepository;
-}
+export type Index = Map<Repository, WebRepository>;
 
 export type Commit = string;
 export type Repository = string;
