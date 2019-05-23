@@ -29,31 +29,7 @@ ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <App
       page={{
-        kind: "ViewTour",
-        tour: {
-          repositories: new Map(),
-          stops: [
-            {
-              title: "First Stop",
-              body: "A *really* cool tour stop.",
-              line: 35,
-              relPath: "src/tourist.ts",
-              repository: "tourist"
-            },
-            {
-              title: "Second Stop",
-              body: "Another super cool stop. This time with `code`!",
-              line: 10,
-              relPath: "index.ts",
-              repository: "tourist"
-            }
-          ],
-          title: "My First Tour",
-          description: "A tour."
-        },
-        index: new Map([
-          ["tourist", { provider: "github", name: "hgoldstein95/tourist" }]
-        ])
+        kind: "UploadTour"
       }}
     />
   </MuiThemeProvider>,
