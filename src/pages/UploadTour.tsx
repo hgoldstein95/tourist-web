@@ -9,13 +9,29 @@ import {
   IconButton,
   Icon
 } from "@material-ui/core";
-import { isTour } from "../model";
+import { parseTour } from "../model";
+import { Theme, makeStyles } from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme: Theme) => {
+  console.log(theme);
+  return {
+    bgErr: {
+      backgroundColor: theme.palette.error.dark
+    },
+    errIcon: {
+      fontSize: 20,
+      opacity: 0.9,
+      marginRight: 10
+    }
+  };
+});
 
 export const UploadTour: React.FC<{
   page: UploadTourPage;
   route: (s: Page) => void;
 }> = props => {
   const [error, setError] = useState(null as string | null);
+  const classes = useStyles(props);
 
   function uploadTour(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files![0];
@@ -24,20 +40,15 @@ export const UploadTour: React.FC<{
     fr.readAsText(file);
     fr.onload = loaded => {
       const json = (loaded.target as any).result;
-      try {
-        const tour = JSON.parse(json);
-        if (!isTour(tour)) {
-          setError("Could not process file as tour.");
-          return;
-        }
-        props.route({
-          kind: "CreateIndex",
-          tour: tour
-        });
-      } catch (_) {
-        setError("File was not valid JSON.");
+      const tour = parseTour(json);
+      if (typeof tour == "string") {
+        setError(tour);
         return;
       }
+      props.route({
+        kind: "CreateIndex",
+        tour: tour
+      });
     };
   }
 
@@ -77,26 +88,20 @@ export const UploadTour: React.FC<{
           <SnackbarContent
             message={
               <span>
-                <Icon
-                  style={{
-                    fontSize: 20,
-                    opacity: 0.9,
-                    marginRight: 10
-                  }}
-                >
-                  error
-                </Icon>
+                <Icon className={classes.errIcon}>error</Icon>
                 {error}
               </span>
             }
             action={[
-              <IconButton color="inherit" onClick={() => setError(null)}>
+              <IconButton
+                key="close"
+                color="inherit"
+                onClick={() => setError(null)}
+              >
                 <Icon>close</Icon>
               </IconButton>
             ]}
-            style={{
-              backgroundColor: "red"
-            }}
+            className={classes.bgErr}
           />
         </Snackbar>
       </Grid>

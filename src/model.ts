@@ -42,3 +42,21 @@ export function isStop(stop: any): stop is Stop {
     typeof stop.title === "string"
   );
 }
+
+export function parseTour(json: string): Tour | string {
+  let obj: any;
+  try {
+    obj = JSON.parse(json);
+  } catch (_) {
+    return "Failed to parse file as JSON.";
+  }
+  const err = "Could not parse file as a tour.";
+  if (typeof obj.repositories != "object") {
+    return err;
+  }
+  obj.repositories = new Map(Object.entries(obj.repositories));
+  if (!isTour(obj)) {
+    return err;
+  }
+  return obj;
+}

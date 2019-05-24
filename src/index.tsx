@@ -6,9 +6,6 @@ import * as serviceWorker from "./serviceWorker";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core/styles";
 
 const theme = createMuiTheme({
-  typography: {
-    useNextVariants: true
-  },
   palette: {
     primary: {
       light: "#67daff",
@@ -29,7 +26,47 @@ ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <App
       page={{
-        kind: "UploadTour"
+        kind: "CreateIndex",
+        tour: {
+          title: "tourist-library",
+          description: "A tour of the entire tourist library.",
+          repositories: new Map([
+            ["tourist", "a5837a902401225417849baaa78f25384e59d6d0"]
+          ]),
+          stops: [
+            {
+              body:
+                "This class is the bulk of the public API for tourist. It can be created with the normal constructor like this\n```typescript\nconst tourist = new Tourist();\n```\nor from serialized configuration file like this\n```typescript\nconst tourist = Tourist.deserialize(json);\n```",
+              line: 22,
+              relPath: "src/tourist.ts",
+              repository: "tourist",
+              title: "The Tourist Class"
+            },
+            {
+              body: "You can initialize a tour file with the `init` method.",
+              line: 34,
+              relPath: "src/tourist.ts",
+              repository: "tourist",
+              title: "The init Method"
+            },
+            {
+              body:
+                "Tour files can be manipulated with methods like `add`, `edit`, `move`, and `remove`.\n\nYay for tourist!",
+              line: 68,
+              relPath: "src/tourist.ts",
+              repository: "tourist",
+              title: "Manipulating a Tour File"
+            },
+            {
+              body:
+                "This document outlines what errors can be thrown and what they mean.",
+              line: 1,
+              relPath: "docs/error-handling.md",
+              repository: "tourist",
+              title: "Handling Errors"
+            }
+          ]
+        }
       }}
     />
   </MuiThemeProvider>,
