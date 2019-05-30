@@ -1,19 +1,10 @@
-import { Link, Grid, Typography, IconButton, Icon } from "@material-ui/core";
-import React, { useEffect, useState, useRef } from "react";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { Converter } from "showdown";
-import { Stop, Tour, Index, WebRepository } from "../model";
-import { Page, ViewTourPage } from "../pageTypes";
+import { Grid, Icon, IconButton, Link, Typography } from "@material-ui/core";
 import axios from "axios";
-import { Theme, makeStyles } from "@material-ui/core/styles";
-
-const useStyles = makeStyles((theme: Theme) => {
-  return {
-    selectedLine: {
-      backgroundColor: "yellow"
-    }
-  };
-});
+import React, { useEffect, useState } from "react";
+import { Converter } from "showdown";
+import { CodeWindow } from "../components/CodeWindow";
+import { Index, Stop, Tour, WebRepository } from "../model";
+import { Page, ViewTourPage } from "../pageTypes";
 
 export const RepositoryLink: React.FC<{
   repository: WebRepository;
@@ -67,12 +58,7 @@ export const StopCode: React.FC<{
   tour: Tour;
   stop: Stop;
 }> = props => {
-  const FONT_SIZE = 16;
-  const LINE_HEIGHT = 1.2; // should be standard
-
   const [code, setCode] = useState("Loading...");
-  const classes = useStyles();
-  const codeView = useRef(null as HTMLDivElement | null);
 
   const repository = props.index.get(props.stop.repository);
 
@@ -89,52 +75,11 @@ export const StopCode: React.FC<{
         )
         .then(res => {
           setCode(res.data);
-          const elem = codeView.current;
-          if (!elem) {
-            return;
-          }
-          elem.scrollTo(
-            0,
-            Math.max(0, (props.stop.line - 5) * FONT_SIZE * LINE_HEIGHT)
-          );
         });
     }
   }, [props.stop, repository]);
 
-  return (
-    <div
-      ref={codeView}
-      style={{
-        overflow: "auto",
-        position: "relative",
-        maxHeight: "80vh",
-        lineHeight: LINE_HEIGHT,
-        fontSize: FONT_SIZE
-      }}
-    >
-      <SyntaxHighlighter
-        showLineNumbers
-        customStyle={{
-          margin: 0
-        }}
-        lineProps={(
-          lineNumber: number
-        ): React.HTMLAttributes<HTMLSpanElement> => {
-          return lineNumber - 1 === props.stop.line
-            ? { className: classes.selectedLine }
-            : {};
-        }}
-        wrapLines={true}
-        lineNumberStyle={(lineNumber: number): any => {
-          return lineNumber - 1 === props.stop.line
-            ? { fontWeight: "bold" }
-            : {};
-        }}
-      >
-        {code}
-      </SyntaxHighlighter>
-    </div>
-  );
+  return <CodeWindow code={code} focusLine={props.stop.line} />;
 };
 
 export const ViewTour: React.FC<{
