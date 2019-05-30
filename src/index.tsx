@@ -26,7 +26,7 @@ ReactDOM.render(
   <MuiThemeProvider theme={theme}>
     <App
       page={{
-        kind: "CreateIndex",
+        kind: "ViewTour",
         tour: {
           title: "tourist-library",
           description: "A tour of the entire tourist library.",
@@ -34,14 +34,6 @@ ReactDOM.render(
             ["tourist", "a5837a902401225417849baaa78f25384e59d6d0"]
           ]),
           stops: [
-            {
-              body:
-                "This class is the bulk of the public API for tourist. It can be created with the normal constructor like this\n```typescript\nconst tourist = new Tourist();\n```\nor from serialized configuration file like this\n```typescript\nconst tourist = Tourist.deserialize(json);\n```",
-              line: 22,
-              relPath: "src/tourist.ts",
-              repository: "tourist",
-              title: "The Tourist Class"
-            },
             {
               body: "You can initialize a tour file with the `init` method.",
               line: 34,
@@ -66,7 +58,10 @@ ReactDOM.render(
               title: "Handling Errors"
             }
           ]
-        }
+        },
+        index: new Map([
+          ["tourist", { provider: "github", name: "hgoldstein95/tourist" }]
+        ])
       }}
     />
   </MuiThemeProvider>,
