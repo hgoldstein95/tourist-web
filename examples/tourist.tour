@@ -7,14 +7,14 @@
   "stops": [
     {
       "body": "You can initialize a tour file with the `init` method.",
-      "line": 34,
+      "line": 35,
       "relPath": "src/tourist.ts",
       "repository": "tourist",
       "title": "The init Method"
     },
     {
       "body": "Tour files can be manipulated with methods like `add`, `edit`, `move`, and `remove`.\n\nYay for tourist!",
-      "line": 68,
+      "line": 69,
       "relPath": "src/tourist.ts",
       "repository": "tourist",
       "title": "Manipulating a Tour File"

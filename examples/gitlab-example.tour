@@ -1,0 +1,16 @@
+{
+  "title": "Basic GitLab Example",
+  "description": "An example project on GitLab.",
+  "repositories": {
+    "example": "c9c82bad34b701ce9354be0653a147271a9cf48a"
+  },
+  "stops": [
+    {
+      "body": "This is the `README` document.",
+      "line": 3,
+      "relPath": "README.md",
+      "repository": "example",
+      "title": "Somewhere in the README"
+    }
+  ]
+}

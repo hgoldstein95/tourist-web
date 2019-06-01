@@ -1,11 +1,17 @@
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import React, { useEffect, useRef } from "react";
-import SyntaxHighlighter from "react-syntax-highlighter";
+import React, { useRef, useEffect } from "react";
+import MonacoEditor from "react-monaco-editor";
+import { Theme, makeStyles } from "@material-ui/core/styles";
 
 const useStyles = makeStyles((theme: Theme) => {
   return {
-    selectedLine: {
-      backgroundColor: "yellow"
+    focusLine: {
+      borderTop: "1px solid black",
+      borderBottom: "1px solid black"
+    },
+    focusLineDeco: {
+      width: "5px !important",
+      marginLeft: 3,
+      backgroundColor: theme.palette.primary.main
     }
   };
 });
@@ -14,55 +20,46 @@ export const CodeWindow: React.FC<{
   code: string;
   focusLine: number;
 }> = props => {
-  const FONT_SIZE = 16;
-  const LINE_HEIGHT = 1.2; // should be standard
-
   const classes = useStyles();
-  const codeView = useRef(null as HTMLDivElement | null);
+  const monaco = useRef(null as MonacoEditor | null);
 
   useEffect(() => {
-    const elem = codeView.current;
-    if (!elem) {
-      return;
-    }
-    elem.scrollTo(
-      0,
-      Math.max(0, (props.focusLine - 5) * FONT_SIZE * LINE_HEIGHT)
+    if (!monaco.current) return;
+    const editor = monaco.current.editor;
+    if (!editor) return;
+    const model = editor.getModel();
+    if (!model) return;
+    model.setValue(props.code);
+    editor.revealLineInCenter(props.focusLine);
+    editor.deltaDecorations(
+      [],
+      [
+        {
+          range: {
+            startLineNumber: props.focusLine,
+            startColumn: 0,
+            endLineNumber: props.focusLine,
+            endColumn: 0
+          },
+          options: {
+            isWholeLine: true,
+            className: classes.focusLine,
+            linesDecorationsClassName: classes.focusLineDeco
+          }
+        }
+      ]
     );
-  }, [props.code, props.focusLine]);
+  }, [monaco, props, classes]);
 
   return (
-    <div
-      ref={codeView}
-      style={{
-        overflow: "auto",
-        position: "relative",
-        maxHeight: "80vh",
-        lineHeight: LINE_HEIGHT,
-        fontSize: FONT_SIZE
+    <MonacoEditor
+      ref={monaco}
+      height="80vh"
+      language="typescript"
+      options={{
+        readOnly: true,
+        minimap: { enabled: false }
       }}
-    >
-      <SyntaxHighlighter
-        showLineNumbers
-        customStyle={{
-          margin: 0
-        }}
-        lineProps={(
-          lineNumber: number
-        ): React.HTMLAttributes<HTMLSpanElement> => {
-          return lineNumber - 1 === props.focusLine
-            ? { className: classes.selectedLine }
-            : {};
-        }}
-        wrapLines={true}
-        lineNumberStyle={(lineNumber: number): any => {
-          return lineNumber - 1 === props.focusLine
-            ? { fontWeight: "bold" }
-            : {};
-        }}
-      >
-        {props.code}
-      </SyntaxHighlighter>
-    </div>
+    />
   );
 };

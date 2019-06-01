@@ -24,46 +24,7 @@ const theme = createMuiTheme({
 
 ReactDOM.render(
   <MuiThemeProvider theme={theme}>
-    <App
-      page={{
-        kind: "ViewTour",
-        tour: {
-          title: "tourist-library",
-          description: "A tour of the entire tourist library.",
-          repositories: new Map([
-            ["tourist", "a5837a902401225417849baaa78f25384e59d6d0"]
-          ]),
-          stops: [
-            {
-              body: "You can initialize a tour file with the `init` method.",
-              line: 34,
-              relPath: "src/tourist.ts",
-              repository: "tourist",
-              title: "The init Method"
-            },
-            {
-              body:
-                "Tour files can be manipulated with methods like `add`, `edit`, `move`, and `remove`.\n\nYay for tourist!",
-              line: 68,
-              relPath: "src/tourist.ts",
-              repository: "tourist",
-              title: "Manipulating a Tour File"
-            },
-            {
-              body:
-                "This document outlines what errors can be thrown and what they mean.",
-              line: 1,
-              relPath: "docs/error-handling.md",
-              repository: "tourist",
-              title: "Handling Errors"
-            }
-          ]
-        },
-        index: new Map([
-          ["tourist", { provider: "github", name: "hgoldstein95/tourist" }]
-        ])
-      }}
-    />
+    <App page={{ kind: "UploadTour" }} />
   </MuiThemeProvider>,
   document.getElementById("root")
 );

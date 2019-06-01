@@ -1,7 +1,13 @@
-export interface WebRepository {
-  provider: "github" | "gitlab";
-  name: string;
-}
+export type WebRepository =
+  | {
+      provider: "github";
+      name: string;
+    }
+  | {
+      provider: "gitlab";
+      name: string;
+      project: number;
+    };
 
 export type Index = Map<Repository, WebRepository>;
 

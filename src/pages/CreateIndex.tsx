@@ -31,10 +31,23 @@ export const CreateIndex: React.FC<{
     e: React.ChangeEvent<{ value: string }>
   ) {
     const map = new Map(mapping);
-    const webRepo = map.get(repository);
-    const provider = webRepo ? webRepo.provider : "github";
-    map.set(repository, { provider, name: e.target.value });
+    const webRepo = map.get(repository)!;
+    webRepo.name = e.target.value;
+    map.set(repository, webRepo);
     setMapping(map);
+  }
+
+  function setProjectNumber(
+    repository: string,
+    e: React.ChangeEvent<{ value: number }>
+  ) {
+    const map = new Map(mapping);
+    const webRepo = map.get(repository)!;
+    if (webRepo.provider === "gitlab") {
+      webRepo.project = e.target.value;
+      map.set(repository, webRepo);
+      setMapping(map);
+    }
   }
 
   function setGitProvider(
@@ -42,9 +55,12 @@ export const CreateIndex: React.FC<{
     e: React.ChangeEvent<{ value: "github" | "gitlab" }>
   ) {
     const map = new Map(mapping);
-    const webRepo = map.get(repository);
-    const name = webRepo ? webRepo.name : "";
-    map.set(repository, { provider: e.target.value, name });
+    const webRepo = map.get(repository)!;
+    webRepo.provider = e.target.value;
+    if (webRepo.provider === "gitlab") {
+      webRepo.project = 0;
+    }
+    map.set(repository, webRepo);
     setMapping(map);
   }
 
@@ -85,7 +101,7 @@ export const CreateIndex: React.FC<{
                       </Grid>
                       <Grid item xs={2}>
                         <Select
-                          value="github"
+                          value={mapping.get(repository)!.provider}
                           onChange={e =>
                             setGitProvider(repository, e as React.ChangeEvent<{
                               value: "github" | "gitlab";
@@ -96,7 +112,12 @@ export const CreateIndex: React.FC<{
                           <MenuItem value="gitlab">GitLab</MenuItem>
                         </Select>
                       </Grid>
-                      <Grid item xs={6}>
+                      <Grid
+                        item
+                        xs={
+                          mapping.get(repository)!.provider !== "gitlab" ? 6 : 4
+                        }
+                      >
                         <TextField
                           style={{ width: "100%" }}
                           onChange={e => setRepositoryTag(repository, e)}
@@ -106,12 +127,30 @@ export const CreateIndex: React.FC<{
                               : ""
                           }
                           label={
-                            i === 0
+                            i === 0 &&
+                            mapping.get(repository)!.provider !== "gitlab"
                               ? "Repository Tag (e.g. noobmaster69/my-repo)"
                               : "Repository Tag"
                           }
                         />
                       </Grid>
+                      {mapping.get(repository)!.provider !== "gitlab" || (
+                        <Grid item xs={2}>
+                          <TextField
+                            style={{ width: "100%", marginLeft: 10 }}
+                            type="number"
+                            onChange={e =>
+                              setProjectNumber(repository, e as any)
+                            }
+                            value={
+                              mapping.get(repository) &&
+                              mapping.get(repository)!.provider === "gitlab"
+                                ? (mapping.get(repository) as any).project
+                                : 0
+                            }
+                          />
+                        </Grid>
+                      )}
                     </Grid>
                   </Grid>
                 ))}
@@ -119,7 +158,7 @@ export const CreateIndex: React.FC<{
             </Grid>
             <Grid item xs={12} style={{ textAlign: "right", marginTop: 50 }}>
               <Button onClick={finalize} color="primary" variant="outlined">
-                Finalize
+                Start Tour
               </Button>
             </Grid>
           </Grid>

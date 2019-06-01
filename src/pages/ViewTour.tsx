@@ -1,85 +1,22 @@
-import { Grid, Icon, IconButton, Link, Typography } from "@material-ui/core";
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { Converter } from "showdown";
-import { CodeWindow } from "../components/CodeWindow";
-import { Index, Stop, Tour, WebRepository } from "../model";
+import { Grid, Icon, IconButton, Typography } from "@material-ui/core";
+import React, { useState } from "react";
+import { StopView } from "../components/StopView";
 import { Page, ViewTourPage } from "../pageTypes";
+import { Tour } from "../model";
 
-export const RepositoryLink: React.FC<{
-  repository: WebRepository;
-  path: string;
-  line: number;
-}> = props => {
-  const url =
-    "https://github.com/" +
-    props.repository.name +
-    "/blob/master/" +
-    props.path +
-    "#L" +
-    props.line;
-  return (
-    <Link href={url} style={{ float: "right" }}>
-      View on GitHub
-    </Link>
-  );
-};
-
-export const StopProse: React.FC<{
-  index: Index;
+export const TitlePage: React.FC<{
   tour: Tour;
-  stop: Stop;
 }> = props => {
-  const stop = props.stop;
-
-  const repository = props.index.get(props.stop.repository);
-
-  const converter = new Converter();
-  converter.setFlavor("github");
-  const htmlBody = converter.makeHtml(stop.body);
-
   return (
-    <div>
-      <Typography variant="h3">{stop.title}</Typography>
-      <div dangerouslySetInnerHTML={{ __html: htmlBody }} />
-      {repository && (
-        <RepositoryLink
-          repository={repository}
-          path={stop.relPath}
-          line={stop.line}
-        />
-      )}
-    </div>
+    <Grid container>
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        <Typography variant="h3">{props.tour.title}</Typography>
+      </Grid>
+      <Grid item xs={12} style={{ textAlign: "center" }}>
+        <p style={{ marginTop: 50 }}>{props.tour.description}</p>
+      </Grid>
+    </Grid>
   );
-};
-
-export const StopCode: React.FC<{
-  index: Index;
-  tour: Tour;
-  stop: Stop;
-}> = props => {
-  const [code, setCode] = useState("Loading...");
-
-  const repository = props.index.get(props.stop.repository);
-
-  useEffect(() => {
-    if (!repository) {
-      setCode("Repository was not mapped in the index.");
-    } else {
-      axios
-        .get(
-          "https://raw.githubusercontent.com/" +
-            repository.name +
-            "/master/" +
-            props.stop.relPath
-        )
-        .then(res => {
-          setCode(res.data);
-        });
-    }
-  }, [props.stop, repository]);
-
-  return <CodeWindow code={code} focusLine={props.stop.line} />;
 };
 
 export const ViewTour: React.FC<{
@@ -87,18 +24,17 @@ export const ViewTour: React.FC<{
   route: (s: Page) => void;
 }> = props => {
   const stops = props.page.tour.stops;
-  const [index, setIndex] = useState(0);
+  const [index, setIndex] = useState(-1); // -1 means the title page
 
   function incIndex() {
-    setIndex((index + 1) % stops.length);
+    setIndex(Math.min(stops.length, index + 1));
   }
   function decIndex() {
-    setIndex(Math.max(0, index - 1));
+    setIndex(Math.max(-1, index - 1));
   }
 
   const canGoForward = index < stops.length - 1;
-  const canGoBack = index > 0;
-  const stop = stops[index];
+  const canGoBack = index > -1;
 
   return (
     <Grid
@@ -117,15 +53,16 @@ export const ViewTour: React.FC<{
           <Icon>arrow_forward</Icon>
         </IconButton>
       </Grid>
-      <Grid item md={4} xs={12} style={{ paddingRight: 60 }}>
-        <StopProse
-          index={props.page.index}
-          tour={props.page.tour}
-          stop={stop}
-        />
-      </Grid>
-      <Grid item md={8} xs={12}>
-        <StopCode index={props.page.index} tour={props.page.tour} stop={stop} />
+      <Grid item xs={12}>
+        {index === -1 ? (
+          <TitlePage tour={props.page.tour} />
+        ) : (
+          <StopView
+            index={props.page.index}
+            tour={props.page.tour}
+            stop={stops[index]}
+          />
+        )}
       </Grid>
     </Grid>
   );
