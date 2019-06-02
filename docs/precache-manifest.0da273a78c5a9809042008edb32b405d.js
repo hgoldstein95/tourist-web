@@ -12,7 +12,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tourist-web/html.worker.js"
   },
   {
-    "revision": "62ea4b31325459d837416dc9a8b81e33",
+    "revision": "61a1658581a395f1b69e22e4a1449b2b",
     "url": "/tourist-web/index.html"
   },
   {
@@ -24,7 +24,7 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tourist-web/static/css/3.0064043a.chunk.css"
   },
   {
-    "revision": "eec600c226f4f12dbf29",
+    "revision": "375327b70bc04956d0a0",
     "url": "/tourist-web/static/css/main.92513036.chunk.css"
   },
   {
@@ -244,8 +244,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/tourist-web/static/js/9.06863ba0.chunk.js"
   },
   {
-    "revision": "eec600c226f4f12dbf29",
-    "url": "/tourist-web/static/js/main.77bceb3e.chunk.js"
+    "revision": "375327b70bc04956d0a0",
+    "url": "/tourist-web/static/js/main.26c4f8c7.chunk.js"
   },
   {
     "revision": "04331e84c22449f7683e",
