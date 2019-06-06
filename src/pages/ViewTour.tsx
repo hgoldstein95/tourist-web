@@ -1,5 +1,5 @@
 import { Grid, Icon, IconButton, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StopView } from "../components/StopView";
 import { Page, ViewTourPage } from "../pageTypes";
 import { Tour } from "../model";
@@ -26,15 +26,26 @@ export const ViewTour: React.FC<{
   const stops = props.page.tour.stops;
   const [index, setIndex] = useState(-1); // -1 means the title page
 
+  function setAndStoreIndex(idx: number) {
+    setIndex(idx);
+    localStorage.setItem("stopNumber", idx.toString());
+  }
+
   function incIndex() {
-    setIndex(Math.min(stops.length, index + 1));
+    setAndStoreIndex(Math.min(stops.length, index + 1));
   }
   function decIndex() {
-    setIndex(Math.max(-1, index - 1));
+    setAndStoreIndex(Math.max(-1, index - 1));
   }
 
   const canGoForward = index < stops.length - 1;
   const canGoBack = index > -1;
+
+  useEffect(() => {
+    const idx = localStorage.getItem("stopNumber");
+    if (!idx) return;
+    setIndex(+idx);
+  }, []);
 
   return (
     <Grid

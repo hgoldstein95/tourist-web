@@ -66,3 +66,37 @@ export function parseTour(json: string): Tour | string {
   }
   return obj;
 }
+
+export function writeTour(tour: Tour): string {
+  const repos = {} as any;
+  Array.from(tour.repositories.entries()).forEach(([k, v]) => {
+    repos[k] = v;
+  });
+  console.log(repos);
+  return JSON.stringify({
+    ...tour,
+    repositories: repos
+  });
+}
+
+export function parseIndex(json: string): Index | string {
+  let obj: any;
+  try {
+    obj = JSON.parse(json);
+  } catch (_) {
+    return "Failed to parse file as JSON.";
+  }
+  const err = "Could not parse file as a tour.";
+  if (typeof obj != "object") {
+    return err;
+  }
+  return new Map(Object.entries(obj));
+}
+
+export function writeIndex(index: Index): string {
+  const obj = {} as any;
+  Array.from(index.entries()).forEach(([k, v]) => {
+    obj[k] = v;
+  });
+  return JSON.stringify(obj);
+}

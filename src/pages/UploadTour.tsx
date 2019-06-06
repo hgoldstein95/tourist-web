@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { UploadTourPage, Page } from "../pageTypes";
 import { Typography, Grid, Button } from "@material-ui/core";
 import { ErrorSnackbar } from "../components/ErrorSnackbar";
-import { parseTour } from "../model";
+import { parseTour, writeTour } from "../model";
 
 export const UploadTour: React.FC<{
   page: UploadTourPage;
@@ -22,9 +22,10 @@ export const UploadTour: React.FC<{
         setError(tour);
         return;
       }
+      localStorage.setItem("savedTour", writeTour(tour));
       props.route({
         kind: "CreateIndex",
-        tour: tour
+        tour
       });
     };
   }
@@ -35,7 +36,7 @@ export const UploadTour: React.FC<{
         container
         justify="center"
         alignItems="center"
-        style={{ height: "100vh" }}
+        style={{ marginTop: "10%" }}
       >
         <Grid item xs={7} style={{ textAlign: "center" }}>
           <Typography variant="h3" style={{ marginBottom: 20 }}>

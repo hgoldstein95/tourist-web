@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from "@material-ui/core";
 import React, { useState } from "react";
 import { ErrorSnackbar } from "../components/ErrorSnackbar";
 import { WebRepositoryEditor } from "../components/WebRepositoryEditor";
-import { WebRepository } from "../model";
+import { WebRepository, writeIndex } from "../model";
 import { CreateIndexPage, Page } from "../pageTypes";
 
 export const CreateIndex: React.FC<{
@@ -37,6 +37,7 @@ export const CreateIndex: React.FC<{
       setError("You must set a mapping for every repository.");
       return;
     }
+    localStorage.setItem("savedIndex", writeIndex(webRepositories));
     props.route({
       kind: "ViewTour",
       tour: props.page.tour,
@@ -48,7 +49,7 @@ export const CreateIndex: React.FC<{
     <div>
       <Grid
         container
-        style={{ height: "100vh" }}
+        style={{ marginTop: "10%" }}
         justify="center"
         alignItems="center"
       >
