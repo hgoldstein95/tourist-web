@@ -37,7 +37,11 @@ const App: React.FC<{ page?: Page }> = props => {
     const index = getSavedIndex();
     if (tour) {
       if (index) {
-        setPage({ kind: "ViewTour", tour, index });
+        setPage({
+          kind: "ViewTour",
+          tour,
+          context: { kind: "ResolveWithIndex", index }
+        });
       } else {
         setPage({ kind: "CreateIndex", tour });
       }

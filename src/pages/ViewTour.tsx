@@ -69,7 +69,7 @@ export const ViewTour: React.FC<{
           <TitlePage tour={props.page.tour} />
         ) : (
           <StopView
-            index={props.page.index}
+            context={props.page.context}
             tour={props.page.tour}
             stop={stops[index]}
           />

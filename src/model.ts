@@ -56,13 +56,17 @@ export function parseTour(json: string): Tour | string {
   } catch (_) {
     return "Failed to parse file as JSON.";
   }
-  const err = "Could not parse file as a tour.";
-  if (typeof obj.repositories != "object") {
-    return err;
-  }
-  obj.repositories = new Map(Object.entries(obj.repositories));
-  if (!isTour(obj)) {
-    return err;
+  try {
+    if (typeof obj.repositories != "object") throw new Error();
+    obj.repositories = new Map(
+      (obj.repositories as any[]).map((repo: any) => [
+        repo.repository,
+        repo.commit
+      ])
+    );
+    if (!isTour(obj)) throw new Error();
+  } catch (_) {
+    return "Could not parse file as tour.";
   }
   return obj;
 }
@@ -72,7 +76,6 @@ export function writeTour(tour: Tour): string {
   Array.from(tour.repositories.entries()).forEach(([k, v]) => {
     repos[k] = v;
   });
-  console.log(repos);
   return JSON.stringify({
     ...tour,
     repositories: repos
@@ -86,7 +89,7 @@ export function parseIndex(json: string): Index | string {
   } catch (_) {
     return "Failed to parse file as JSON.";
   }
-  const err = "Could not parse file as a tour.";
+  const err = "Could not parse object as index.";
   if (typeof obj != "object") {
     return err;
   }

@@ -41,7 +41,7 @@ export const CreateIndex: React.FC<{
     props.route({
       kind: "ViewTour",
       tour: props.page.tour,
-      index: webRepositories
+      context: { kind: "ResolveWithIndex", index: webRepositories }
     });
   }
 
