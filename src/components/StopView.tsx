@@ -156,7 +156,13 @@ export const StopCode: React.FC<{
     }
   }, [props.stop, props.tour, props.context]);
 
-  return <CodeWindow code={code} focusLine={props.stop.line} />;
+  return (
+    <CodeWindow
+      code={code}
+      focusLine={props.stop.line}
+      fileName={props.stop.relPath}
+    />
+  );
 };
 
 export const StopView: React.FC<{

@@ -3,17 +3,25 @@ import React, { useState, useEffect } from "react";
 import { StopView } from "../components/StopView";
 import { Page, ViewTourPage } from "../pageTypes";
 import { Tour } from "../model";
+import { Converter } from "showdown";
 
 export const TitlePage: React.FC<{
   tour: Tour;
 }> = props => {
+  const converter = new Converter();
+  converter.setFlavor("github");
+  const htmlBody = converter.makeHtml(props.tour.description);
+
   return (
     <Grid container>
       <Grid item xs={12} style={{ textAlign: "center" }}>
         <Typography variant="h3">{props.tour.title}</Typography>
       </Grid>
       <Grid item xs={12} style={{ textAlign: "center" }}>
-        <p style={{ marginTop: 50 }}>{props.tour.description}</p>
+        <div
+          dangerouslySetInnerHTML={{ __html: htmlBody }}
+          style={{ marginTop: 50 }}
+        />
       </Grid>
     </Grid>
   );
